@@ -8,6 +8,21 @@ import {
   parseSteps,
 } from './catalog.js';
 
+/**
+ * Рендерит один пункт списка ингредиентов: подзаголовок группы
+ * (напр. "Для теста") — без маркера, обычный пункт — с маркером.
+ */
+function createIngredientListItem(entry) {
+  const li = document.createElement('li');
+  if (entry.type === 'heading') {
+    li.className = 'ingredient-list__heading';
+  } else {
+    li.className = 'ingredient-list__item';
+  }
+  li.textContent = entry.text;
+  return li;
+}
+
 // ---- Глобальное состояние приложения ----
 const state = {
   categories: [],
@@ -156,11 +171,8 @@ function openRecipeDetail(id) {
 
     const list = document.createElement('ul');
     list.className = 'ingredient-list';
-    ingredients.forEach(item => {
-      const li = document.createElement('li');
-      li.className = 'ingredient-list__item';
-      li.textContent = item;
-      list.appendChild(li);
+    ingredients.forEach(entry => {
+      list.appendChild(createIngredientListItem(entry));
     });
     section.appendChild(list);
     el.recipeDetail.appendChild(section);
