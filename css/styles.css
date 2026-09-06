@@ -1,0 +1,385 @@
+/* ============================================================
+   ТОКЕНЫ ТЕМЫ
+   Базовые цвета фона/текста подстраиваются под тему Telegram
+   (см. js/app.js -> applyThemeParams). Акцентные цвета (травяной
+   зелёный и горчичный) фиксированы — это фирменные цвета книги
+   рецептов, они не зависят от темы.
+   ============================================================ */
+:root {
+  --tg-bg-color: #fdfbf7;
+  --tg-secondary-bg-color: #f4efe6;
+  --tg-text-color: #2a2620;
+  --tg-hint-color: #8a8377;
+  --tg-link-color: #5c6e3f;
+  --tg-button-color: #5c6e3f;
+  --tg-button-text-color: #ffffff;
+
+  --brand-herb: #5c6e3f;
+  --brand-herb-dark: #46542f;
+  --brand-mustard: #c98a2b;
+
+  --border-color: rgba(42, 38, 32, 0.1);
+  --card-radius: 14px;
+  --chip-radius: 10px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--tg-bg-color);
+  color: var(--tg-text-color);
+  font-family: var(--font-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  padding-bottom: calc(24px + var(--safe-bottom));
+}
+
+button {
+  font-family: inherit;
+}
+
+::selection {
+  background: var(--brand-mustard);
+  color: #fff;
+}
+
+/* ============================================================
+   ШАПКА
+   ============================================================ */
+.header {
+  padding: 22px 20px 6px;
+}
+
+.header__title {
+  font-family: var(--font-display);
+  font-size: 25px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+/* ============================================================
+   ПОИСК
+   ============================================================ */
+.search-bar {
+  padding: 14px 20px 12px;
+}
+
+.search-input {
+  width: 100%;
+  border: 1px solid var(--border-color);
+  background: var(--tg-secondary-bg-color);
+  border-radius: 12px;
+  padding: 11px 14px;
+  font-size: 15px;
+  color: var(--tg-text-color);
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: var(--tg-hint-color);
+}
+
+.search-input:focus {
+  border-color: var(--brand-herb);
+}
+
+/* ============================================================
+   ЧИПЫ КАТЕГОРИЙ
+   Оформлены как закладки книжного оглавления: подчёркивание
+   вместо заполненной пилюли.
+   ============================================================ */
+.chips-row {
+  display: flex;
+  gap: 20px;
+  padding: 2px 20px 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--border-color);
+  margin: 0 0 4px;
+}
+
+.chips-row::-webkit-scrollbar {
+  display: none;
+}
+
+.chip {
+  flex: 0 0 auto;
+  border: none;
+  background: transparent;
+  color: var(--tg-hint-color);
+  padding: 4px 0 10px;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -17px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.chip.is-active {
+  color: var(--tg-text-color);
+  border-bottom-color: var(--brand-mustard);
+}
+
+/* ============================================================
+   СОСТОЯНИЯ (загрузка / ошибка / пусто)
+   ============================================================ */
+.state-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 64px 24px;
+  text-align: center;
+  color: var(--tg-hint-color);
+  font-size: 14px;
+}
+
+.spinner {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--brand-herb);
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   СПИСОК РЕЦЕПТОВ
+   Табличный список вместо сетки картинок — фотографий нет,
+   акцент на названии блюда.
+   ============================================================ */
+.recipe-list {
+  padding: 6px 20px 8px;
+}
+
+.recipe-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 2px;
+  border-bottom: 1px solid var(--border-color);
+  cursor: pointer;
+}
+
+.recipe-item:last-child {
+  border-bottom: none;
+}
+
+.recipe-item__body {
+  min-width: 0;
+}
+
+.recipe-item__name {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.recipe-item__meta {
+  font-size: 12.5px;
+  color: var(--tg-hint-color);
+  margin-top: 3px;
+}
+
+.recipe-item__arrow {
+  font-size: 22px;
+  color: var(--brand-mustard);
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+/* ============================================================
+   МОДАЛЬНАЯ "ШТОРКА" С РЕЦЕПТОМ
+   ============================================================ */
+.sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 26, 18, 0.45);
+  display: flex;
+  align-items: flex-end;
+  z-index: 50;
+}
+
+.sheet {
+  background: var(--tg-bg-color);
+  width: 100%;
+  max-height: 92vh;
+  border-radius: 20px 20px 0 0;
+  display: flex;
+  flex-direction: column;
+  animation: slide-up 0.22s ease-out;
+  padding-bottom: var(--safe-bottom);
+}
+
+@keyframes slide-up {
+  from { transform: translateY(24px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.sheet__header {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  flex-shrink: 0;
+}
+
+.sheet__back {
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  color: var(--tg-hint-color);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+}
+
+.sheet__body {
+  padding: 4px 22px 32px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* ============================================================
+   ДЕТАЛЬНАЯ КАРТОЧКА РЕЦЕПТА
+   ============================================================ */
+.recipe-detail__name {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 4px 0 20px;
+}
+
+.recipe-section {
+  margin-bottom: 26px;
+}
+
+.recipe-section__heading {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--brand-herb-dark);
+  margin: 0 0 10px;
+}
+
+.ingredient-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ingredient-list__item {
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--border-color);
+  font-size: 14.5px;
+  line-height: 1.4;
+}
+
+.ingredient-list__item:last-child {
+  border-bottom: none;
+}
+
+.ingredient-list__item::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand-mustard);
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+.step-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: step;
+}
+
+.step-list__item {
+  counter-increment: step;
+  display: flex;
+  gap: 14px;
+  padding: 10px 0;
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+
+.step-list__item::before {
+  content: counter(step);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--brand-mustard);
+  flex-shrink: 0;
+  width: 22px;
+  text-align: center;
+}
+
+.recipe-note {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--tg-hint-color);
+  border-left: 3px solid var(--brand-mustard);
+  padding: 4px 0 4px 14px;
+  margin: 0;
+}
+
+/* ============================================================
+   КНОПКИ
+   ============================================================ */
+.btn {
+  border: none;
+  border-radius: 12px;
+  padding: 13px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn--secondary {
+  background: var(--tg-secondary-bg-color);
+  color: var(--tg-text-color);
+}
+
+/* ============================================================
+   АДАПТИВНОСТЬ
+   ============================================================ */
+@media (min-width: 720px) {
+  .sheet-overlay {
+    align-items: center;
+    justify-content: center;
+  }
+  .sheet {
+    max-width: 480px;
+    border-radius: 20px;
+    max-height: 82vh;
+  }
+}

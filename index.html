@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Кулинарная книга</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="css/styles.css" />
+<!-- Telegram Web App JS API -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+
+  <!-- Шапка -->
+  <header class="header">
+    <h1 class="header__title" id="app-title">Кулинарная книга</h1>
+  </header>
+
+  <!-- Поиск -->
+  <div class="search-bar">
+    <input
+      type="search"
+      id="search-input"
+      class="search-input"
+      placeholder="Найти рецепт..."
+    />
+  </div>
+
+  <!-- Категории -->
+  <nav class="chips-row" id="categories-row" aria-label="Категории рецептов"></nav>
+
+  <!-- Состояние загрузки -->
+  <div class="state-message" id="loading-state">
+    <div class="spinner"></div>
+    <p>Загружаем книгу рецептов...</p>
+  </div>
+
+  <!-- Состояние ошибки -->
+  <div class="state-message" id="error-state" hidden>
+    <p>Не удалось загрузить книгу рецептов.</p>
+    <button class="btn btn--secondary" id="retry-btn">Повторить</button>
+  </div>
+
+  <!-- Пустой результат -->
+  <div class="state-message" id="empty-state" hidden>
+    <p>Рецепты не найдены</p>
+  </div>
+
+  <!-- Список рецептов -->
+  <main class="recipe-list" id="recipe-list" hidden></main>
+
+  <!-- Карточка рецепта (детальный просмотр) -->
+  <div class="sheet-overlay" id="recipe-overlay" hidden>
+    <div class="sheet" id="recipe-sheet" role="dialog" aria-modal="true">
+      <div class="sheet__header">
+        <button class="sheet__back" id="recipe-close" type="button" aria-label="Назад">←</button>
+      </div>
+      <div class="sheet__body" id="recipe-detail"></div>
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
