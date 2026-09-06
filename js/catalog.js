@@ -52,7 +52,7 @@ export function createRecipeRow(recipe) {
   name.textContent = recipe.name;
   body.appendChild(name);
 
-  const ingredientCount = parseIngredients(recipe.ingredients).length;
+  const ingredientCount = countIngredients(parseIngredients(recipe.ingredients));
   if (ingredientCount > 0) {
     const meta = document.createElement('div');
     meta.className = 'recipe-item__meta';
@@ -81,14 +81,45 @@ function pluralizeIngredients(n) {
 }
 
 /**
- * Разбивает строку ингредиентов (разделённых ";") на массив
- * отдельных пунктов, убирая переносы строк внутри исходной ячейки.
+ * Разбивает ячейку с ингредиентами на массив отдельных пунктов.
+ *
+ * В таблице встречаются два формата записи (иногда даже в одной
+ * ячейке): пункты через ";" и/или пункты каждый на новой строке.
+ * Поэтому сначала делим по переносам строк, а затем каждую строку
+ * ещё и по ";" — так пункты не склеиваются, каким бы разделителем
+ * их ни записали.
+ *
+ * Строки вида "Для теста:" (заканчиваются двоеточием) распознаются
+ * как подзаголовок группы, а не как ингредиент, и возвращаются
+ * отдельным типом записи для отображения без маркера-точки.
+ *
+ * Возвращает массив { type: 'item' | 'heading', text }.
  */
 export function parseIngredients(raw) {
-  return String(raw || '')
-    .split(';')
-    .map(s => s.replace(/\s*\n\s*/g, ' ').trim())
+  const lines = String(raw || '')
+    .split('\n')
+    .map(l => l.trim())
     .filter(Boolean);
+
+  const entries = [];
+  lines.forEach(line => {
+    if (/:\s*$/.test(line)) {
+      entries.push({ type: 'heading', text: line.replace(/:\s*$/, '') });
+      return;
+    }
+    line
+      .split(';')
+      .map(s => s.trim())
+      .filter(Boolean)
+      .forEach(text => entries.push({ type: 'item', text }));
+  });
+
+  return entries;
+}
+
+/** Считает только реальные пункты ингредиентов, без подзаголовков групп. */
+export function countIngredients(entries) {
+  return entries.filter(e => e.type === 'item').length;
 }
 
 /**
