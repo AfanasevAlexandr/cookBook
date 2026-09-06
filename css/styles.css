@@ -314,6 +314,20 @@ button {
   vertical-align: middle;
 }
 
+.ingredient-list__heading {
+  list-style: none;
+  padding: 12px 0 4px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 13.5px;
+  color: var(--brand-herb-dark);
+  border-bottom: none;
+}
+
+.ingredient-list__heading:first-child {
+  padding-top: 0;
+}
+
 .step-list {
   list-style: none;
   margin: 0;
